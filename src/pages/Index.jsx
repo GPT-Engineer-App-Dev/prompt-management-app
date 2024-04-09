@@ -282,7 +282,7 @@ const Index = () => {
           <FormLabel>Prompt Text</FormLabel>
           <Input type="text" value={promptText} onChange={(e) => setPromptText(e.target.value)} />
         </FormControl>
-        <Button leftIcon={<FaPlus />} colorScheme="blue" onClick={editingPromptId ? handleUpdatePrompt : handleCreatePrompt}>
+        <Button leftIcon={<FaPlus />} colorScheme="green" onClick={editingPromptId ? handleUpdatePrompt : handleCreatePrompt}>
           {editingPromptId ? "Update Prompt" : "Create Prompt"}
         </Button>
       </Box>
