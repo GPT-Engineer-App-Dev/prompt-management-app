@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, FormControl, FormLabel, Heading, Input, Link, Stack, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormLabel, Heading, Input, Link, Stack, Text, useToast, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
 const API_URL = "http://localhost:1337/api";
@@ -13,6 +13,7 @@ const Index = () => {
   const [promptName, setPromptName] = useState("");
   const [promptText, setPromptText] = useState("");
   const [editingPromptId, setEditingPromptId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
@@ -123,6 +124,7 @@ const Index = () => {
         setPrompts([...prompts, data.data]);
         setPromptName("");
         setPromptText("");
+        setIsModalOpen(false);
         toast({
           title: "Prompt created",
           status: "success",
@@ -270,22 +272,33 @@ const Index = () => {
           </Box>
         ))}
       </Stack>
-      <Box mt={8}>
-        <Heading size="md" mb={4}>
-          {editingPromptId ? "Edit Prompt" : "Create Prompt"}
-        </Heading>
-        <FormControl id="promptName" mb={4}>
-          <FormLabel>Prompt Name</FormLabel>
-          <Input type="text" value={promptName} onChange={(e) => setPromptName(e.target.value)} />
-        </FormControl>
-        <FormControl id="promptText" mb={4}>
-          <FormLabel>Prompt Text</FormLabel>
-          <Input type="text" value={promptText} onChange={(e) => setPromptText(e.target.value)} />
-        </FormControl>
-        <Button leftIcon={<FaPlus />} colorScheme="green" onClick={editingPromptId ? handleUpdatePrompt : handleCreatePrompt}>
-          {editingPromptId ? "Update Prompt" : "Create Prompt"}
-        </Button>
-      </Box>
+      <Button leftIcon={<FaPlus />} colorScheme="green" onClick={() => setIsModalOpen(true)}>
+        Create Prompt
+      </Button>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create Prompt</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl id="promptName" mb={4}>
+              <FormLabel>Prompt Name</FormLabel>
+              <Input type="text" value={promptName} onChange={(e) => setPromptName(e.target.value)} />
+            </FormControl>
+            <FormControl id="promptText" mb={4}>
+              <FormLabel>Prompt Text</FormLabel>
+              <Input type="text" value={promptText} onChange={(e) => setPromptText(e.target.value)} />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleCreatePrompt}>
+              Create
+            </Button>
+            <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Button mt={8} onClick={handleLogout}>
         Logout
       </Button>
